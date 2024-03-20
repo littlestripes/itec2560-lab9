@@ -1,0 +1,14 @@
+When comparing the two side-by-side, what immediately jumps out to me is how
+much cleaner and more readable the same app's code is in Vue. It's easier to
+follow the flow of data and understand what does what; data's "duties" are
+clearly delineated. Vue's more advanced methods of dealing with the DOM are
+made clear when you consider how much boilerplate is involved in vanilla JS.
+Categorizing data into refs and computed properties and keeping in mind the
+principle of reactivity helps the developer passively write better code
+without contributing mental overhead.
+
+I strongly prefer the Vue approach. I find that its readability and elegance
+make it a joy to use and its developer ecosystem provides for a very
+comfortable experience. Instead of fighting with vanilla JavaScript's opaque
+errors, I'm able to see all of the objects I'll be working with at a glance
+and know immediately what's wrong and where.
