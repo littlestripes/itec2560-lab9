@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Club Membership</title>
+
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+  <style>
+      
+      .selected {
+        text-decoration: line-through ;
+        font-style: italic;
+        color: gray;
+      }
+
+      input {
+          width: 100%;
+          padding: 5px;
+          margin: 5px 5px 5px 0px;
+          box-sizing: border-box;
+      }
+
+  </style>
+
+</head>
+<body>
+
+<div id="app">
+    <h1>Student Club Roster</h1>
+
+    <h2>Add Students</h2>
+
+    <label for="student-name">Student Name</label>
+    <input id="student-name" name="student-name" v-model="newStudentName">
+
+    <br>
+
+    <label for="student-id">Student ID</label>
+    <input id="student-id" name="student-id" v-model="newStudentID">
+
+    <br>
+
+    <label for="student-gpa">Student GPA</label>
+    <input id="student-gpa" name="student-gpa" type="number" v-model="newStudentGPA">
+
+    <br>
+
+    <button id="add-student" @click="addNewStudent">Add Student</button>    
+
+    <h2>Student List</h2>
+
+    <p>There is/are 
+        <span id="student-count">
+            {{ studentCount }}
+        </span> 
+    student(s) in the club.</p>
+    
+
+    <ul id="student-list">
+        <li v-for="student in studentList" @click="selectOrUnselectStudent(student)" :class="{ selected: student.selected }">
+            {{ student.name }}, id: {{ student.id }}, GPA {{ student.gpa }}
+        </li>
+    </ul>
+
+    <button id="remove-selected-students" @click="removeSelectedStudents">Remove selected students</button>
+
+</div>  <!-- end of div#app -->
+
+<script>
+
+    const { createApp, ref, computed } = Vue;
+
+    createApp({
+        setup() {
+
+            // initializing
+            const studentList = ref([]);
+            
+            const newStudentName = ref('');
+            const newStudentID   = ref('');
+            const newStudentGPA  = ref('');
+
+            const errors = ref([]);
+
+            const studentCount = computed( () => studentList.value.length );
+
+            const addNewStudent = () => {
+                // initialize error array
+                errors.value = [];
+
+                // error checking
+                if (!newStudentName.value) { errors.value.push('Must enter student name'); }
+                if (!newStudentID.value) { errors.value.push('Must enter student ID'); }
+                if (!newStudentGPA.value) { errors.value.push('Must enter student GPA'); }
+                if (newStudentGPA.value < 0 || newStudentGPA.value > 4) { errors.value.push('Invalid GPA; must be between 0 and 4'); }
+                
+                if (errors.value.length > 0) {
+                    alert(errors.value.join('\n'));
+                    // will not add student
+                } else {
+                    let student = {
+                        name: newStudentName.value,
+                        id: newStudentID.value,
+                        gpa: newStudentGPA.value,
+                        selected: false
+                    };
+
+                    studentList.value.push(student);
+
+                    // reset inputs
+                    newStudentName.value = '';
+                    newStudentID.value   = '';
+                    newStudentGPA.value  = '';
+                }
+            };
+
+            const removeSelectedStudents = () => {
+                // filter out selected students
+                studentList.value = studentList.value.filter( (student) => {
+                    return !student.selected;
+                });
+            };
+
+            const selectOrUnselectStudent = (student) => { student.selected = !student.selected };
+
+
+            return {
+                // refs
+                studentList,
+                newStudentName,
+                newStudentID,
+                newStudentGPA,
+                errors,
+
+                // functions
+                addNewStudent,
+                removeSelectedStudents,
+                selectOrUnselectStudent,
+
+                // computed
+                studentCount
+            }
+        }
+    }).mount('#app')
+
+</script>
+
+</body>
+</html>
+
